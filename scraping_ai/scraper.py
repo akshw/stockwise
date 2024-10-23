@@ -5,6 +5,9 @@ import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from typing import Dict, Any
+from flask import Flask, request
+
 
 load_dotenv()
 db_url = os.getenv('DATABASE_URL')
@@ -19,19 +22,37 @@ columns = ['datetime', 'title', 'link', 'sentiment', 'score']
 df = pd.DataFrame(columns=columns)
 
 
-def aiAnalysis(payload):
+app = Flask(__name__)
+@app.route('/stock', methods = ['GET'])
+def main():
+    stock = request.args.get('ticker')
+    if stock:
+        return stock
+    else:
+        return "No ticker provided", 400
+    
+
+
+
+    
+
+
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=5000, debug=True )
+
+def aiAnalysis(payload:str) -> Dict[str, Any]:
     tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
     model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
 
     classifier = pipeline('text-classification', model = model, tokenizer = tokenizer)
-    res = classifier(payload)
+    res = list(classifier(payload))
     return res[0]
 
 
 counter = 0
 stock = input('enter stockticker name:')
 ticker = str(stock.lower())
-for page in range(1, 2):
+for page in range(1):
     url = 'https://markets.businessinsider.com/news/'+ticker+'-stock?p='+str(page)
     response = requests.get(url)
     html = response.text
