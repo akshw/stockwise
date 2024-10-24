@@ -1,7 +1,13 @@
+import Navbar from "./components/Navbar";
+import Inputbox from "./components/InputBox";
+import Hero from "./components/Hero";
+
 const App = () => {
   return (
     <>
-      <div className="text-3xl font-bold underline">hiii</div>
+      <Navbar />
+      <Hero />
+      <Inputbox />
     </>
   );
 };

@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyparser = require("body-parser");
 require("dotenv").config();
-const axios = express();
 
 app.use(cors());
 app.use(express.json());
@@ -29,18 +28,19 @@ app.get("/ainews/:name", async (req, res) => {
     const name = req.params.name;
     const response = await data.find({ name: name });
     console.log("here");
-    console.log(response);
 
     if (response && response.length > 0) {
       console.log("here1");
       return res.json(response);
     } else {
       console.log("here2");
-      const scrape_res = await axios.get("http://localhost:5000/stock", {
-        params: { ticker: name },
-      });
+      console.log(name);
+      const scrape_res = await fetch(
+        "http://localhost:4000/stock?ticker=" + name
+      );
 
       if (scrape_res) {
+        console.log("here3");
         const response = await data.find({ name: name });
         res.json(response);
       }
