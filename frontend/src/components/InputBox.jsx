@@ -1,12 +1,29 @@
-const Inputbox = () => {
+import { Search } from "lucide-react";
+import { useState } from "react";
+
+const Inputbox = ({ onSearch, isLoading }) => {
+  const [stockName, setStockName] = useState("");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearch(stockName);
+  };
   return (
     <>
-      <div className="pt-32 border-black flex justify-center">
+      <form
+        onSubmit={handleSubmit}
+        className="flex justify-center items-center space-x-2 mb-8"
+      >
         <input
-          placeholder="Please Search using ticker symbols of Stock "
-          className=""
+          type="text"
+          placeholder="Enter a stock ticker Symbol (e.g., AAPL)"
+          value={stockName}
+          onChange={(e) => setStockName(e.target.value)}
+          className="max-w-xs"
         />
-      </div>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? "Searching..." : <Search className="h-4 w-4" />}
+        </button>
+      </form>
     </>
   );
 };
