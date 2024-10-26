@@ -5,14 +5,23 @@ const Footer = () => {
     <footer className="bg-background border-t">
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div className="flex justify-center space-x-6">
-          <a href="#" className="text-muted-foreground hover:text-primary">
+          <a
+            href="https://markets.businessinsider.com/news/"
+            target="_blank"
+            className="text-muted-foreground hover:text-primary"
+          >
             <Newspaper className="h-6 w-6" />
           </a>
-          <a href="#" className="text-muted-foreground hover:text-primary">
+          <a
+            href="https://huggingface.co/ProsusAI/finbert"
+            target="_blank"
+            className="text-muted-foreground hover:text-primary"
+          >
             <BarChart className="h-6 w-6" />
           </a>
           <a
             href="https://github.com/akshw/stockwise"
+            target="_blank"
             className="text-muted-foreground hover:text-primary"
           >
             <Github className="h-6 w-6" />

@@ -57,23 +57,28 @@ const Inputbox = () => {
   };
   return (
     <>
-      <form
-        onSubmit={handleSubmit}
-        className="flex justify-center items-center space-x-2 mb-8"
-      >
-        <input
-          type="text"
-          placeholder="Enter a stock ticker Symbol (e.g., AAPL)"
-          value={stockName}
-          onChange={(e) => setStockName(e.target.value)}
-          className="max-w-xs"
-        />
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "Searching..." : <Search className="h-4 w-4" />}
-        </button>
-      </form>
+      <div className="mt-8">
+        <form
+          onSubmit={handleSubmit}
+          className="flex justify-center items-center space-x-4 mb-8"
+        >
+          <input
+            type="text"
+            placeholder="Search ticker symbols (e.g AAPL)"
+            value={stockName}
+            onChange={(e) => setStockName(e.target.value)}
+            className="max-w-xl  border border-black px-4 py-2 rounded-lg"
+          />
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? "Searching..." : <Search className="h-6 w-10" />}
+          </button>
+        </form>
+      </div>
+
+      {/* News */}
+
       <div>
-        <div className="space-y-6">
+        <div className="space-y-6 lg:w-1/2 mx-auto">
           <h2 className="text-2xl font-bold text-primary">Latest Stock News</h2>
           {articles.map((article, index) => (
             <div key={index} className="bg-card rounded-lg shadow p-4">
@@ -98,9 +103,9 @@ const Inputbox = () => {
                       : "text-yellow-500"
                   }`}
                 >
-                  {article.sentiment === "Positive" ? (
+                  {article.sentiment === "positive" ? (
                     <ThumbsUp className="h-4 w-4 mr-1" />
-                  ) : article.sentiment === "Negative" ? (
+                  ) : article.sentiment === "negative" ? (
                     <ThumbsDown className="h-4 w-4 mr-1" />
                   ) : (
                     <Minus className="h-4 w-4 mr-1" />

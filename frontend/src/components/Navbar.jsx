@@ -9,7 +9,7 @@ const Navbar = () => {
             <div className="flex items-center">
               <TrendingUp className="h-8 w-8 text-primary" />
               <span className="ml-2 text-xl font-bold text-primary">
-                StockAI News
+                StockWise
               </span>
             </div>
             <div className="flex items-center">

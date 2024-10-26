@@ -3,7 +3,7 @@ import { Newspaper, BarChart, DollarSign } from "lucide-react";
 const Hero = () => {
   return (
     <>
-      <div className="relative py-20 flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 overflow-hidden">
+      <div className="relative py-20 flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 overflow-hidden bg-gray-50">
         <div className="absolute inset-0 bg-grid-white/10 bg-grid-16 [mask-image:radial-gradient(ellipse_at_center,white,transparent_75%)]" />
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-primary mb-4 tracking-tight">

@@ -10,12 +10,14 @@ from dotenv import load_dotenv
 load_dotenv()
 db_url = os.getenv('DATABASE_URL')
 
+
 client = MongoClient(db_url)
 db = client['stockwise']
 collection = db['news_feed1']
 
-# Define the global DataFrame
+
 df = pd.DataFrame(columns=["datetime", "title", "link", "sentiment", "score"])
+
 
 def aiAnalysis(payload: str):
     tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
@@ -24,16 +26,21 @@ def aiAnalysis(payload: str):
     res = classifier(payload)
     return res[0]
 
+
 app = Flask(__name__)
+
 
 @app.route('/stock', methods=['GET'])
 def main():
-    global df  # Refer to the global df
+
+    global df
     
+
     stock_input = request.args.get('ticker')
     ticker = str(stock_input.lower())
     print(f"Ticker: {ticker}")
     
+
     for page in range(1):
         url = f'https://markets.businessinsider.com/news/{ticker}-stock?p={page}'
         response = requests.get(url)
@@ -60,14 +67,17 @@ def main():
                 'score': score
             }
             
-            # Insert into MongoDB
             collection.insert_one(data)
             
-            # Append to the global DataFrame
+
             new_row = pd.DataFrame([[datetime, title, link, sentiment, score]], columns=df.columns)
             df = pd.concat([new_row, df], ignore_index=True)
 
+
+    df.to_csv("news_data.csv", index=False)
     return "Scraping and analysis complete", 200
+
+
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=4000, debug=True)
