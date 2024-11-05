@@ -1,7 +1,7 @@
-from flask import Flask, request
 import os
-from bs4 import BeautifulSoup
 import requests
+from flask import Flask, request
+from bs4 import BeautifulSoup
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 from pymongo import MongoClient
@@ -74,7 +74,7 @@ def main():
             df = pd.concat([new_row, df], ignore_index=True)
 
 
-    df.to_csv("news_data.csv", index=False)
+    df.to_csv("scraped_data.csv", index=False)
     return "Scraping and analysis complete", 200
 
 

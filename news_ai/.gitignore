@@ -1,0 +1,4 @@
+.env
+venv/
+rss_data.csv
+scraped_data.csv
