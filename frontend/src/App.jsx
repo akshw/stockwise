@@ -1,5 +1,5 @@
 import Navbar from "./components/Navbar";
-import Inputbox from "./components/InputBox";
+import Inputbox from "./components/NewsSearch";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
 
