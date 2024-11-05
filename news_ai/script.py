@@ -36,14 +36,14 @@ def main():
     url = 'https://finance.yahoo.com/rss/headline?s='+str(ticker)
     feed = feedparser.parse(url)
 
-    for articles in feed.entries:
-        # if ticker.lower() in articles.summary.lower():
+    for article in feed.entries:
+        # if ticker.lower() in article.summary.lower():
         #    continue
 
-        datetime = articles.published
-        title = articles.title
-        description = articles.summary
-        link = articles.link
+        datetime = article.published
+        title = article.title
+        description = article.summary
+        link = article.link
 
         output = aiAnalysis(title+description)
         sentiment = output['label']
