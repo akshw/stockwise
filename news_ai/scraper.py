@@ -74,7 +74,7 @@ def main():
             df = pd.concat([new_row, df], ignore_index=True)
 
 
-    df.to_csv("scraped_data.csv", index=False)
+    # df.to_csv("scraped_data.csv", index=False)
     return "Scraping and analysis complete", 200
 
 

@@ -1,9 +1,12 @@
 import os
+import json
+import time
 import feedparser
 import pandas as pd 
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 from pymongo import MongoClient
 from flask import Flask, request
+from kafka import KafkaConsumer, KafkaProducer
 from dotenv import load_dotenv
 
 
@@ -64,7 +67,7 @@ def main():
         new_row = pd.DataFrame([[datetime, title, description, link, sentiment, score]], columns=df.columns)
         df = pd.concat([new_row, df], ignore_index=True)
 
-    df.to_csv("rss_data.csv", index=False)
+    # df.to_csv("rss_data.csv", index=False)
     return "rss feed analysis complete", 200
 
 
