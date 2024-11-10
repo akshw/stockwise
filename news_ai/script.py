@@ -1,6 +1,4 @@
 import os
-import json
-import time
 import feedparser
 import pandas as pd 
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline

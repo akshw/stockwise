@@ -4,7 +4,6 @@ import feedparser
 import pandas as pd 
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 from pymongo import MongoClient
-from flask import Flask, request
 from kafka import KafkaConsumer, KafkaProducer
 from dotenv import load_dotenv
 
@@ -43,7 +42,7 @@ def main(stock):
         description = article.summary
         link = article.link
 
-        output = aiAnalysis(title+description)
+        output = aiAnalysis(title)
         sentiment = output['label']
         score = output['score']
 
@@ -63,13 +62,17 @@ def main(stock):
         df = pd.concat([new_row, df], ignore_index=True)
 
     # df.to_csv("rss_data.csv", index=False)
-    return "rss feed analysis complete", 200
+
+    res_producer.send('stock-res', value=result)
+    res_producer.flush()
+
+    return ticker
 
 
 consumer = KafkaConsumer(
     'stock-req',
     bootstrap_servers=['localhost:9092'],
-    group_id='stock-backend-group',
+    group_id='ai-backend-group',
     value_deserializer=lambda m: json.loads(m.decode('utf-8'))
 )
 
@@ -85,9 +88,10 @@ for message in consumer:
     payload = task_data['payload']
     
     ai_res = main(payload)
-    print(ai_res)
     
-    result = {"task_id": task_id, "result": f"Processed {ai_res}"}
+    result = {"response": ai_res }
+    print(result)
     
-    res_producer.send('heavy-tasks-responses', value=result)
-    res_producer.flush()
+    
+
+
