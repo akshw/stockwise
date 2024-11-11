@@ -7,6 +7,7 @@ from pymongo import MongoClient
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from kafka import KafkaProducer, KafkaConsumer
+from queue import Queue
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -24,14 +25,6 @@ producer = KafkaProducer(
     value_serializer=lambda v: json.dumps(v).encode('utf-8')
 )
 
-res_consumer = KafkaConsumer(
-    'stock-req',
-    bootstrap_servers=['localhost:9092'],
-    group_id='main-backend-group',
-    value_deserializer=lambda m: json.loads(m.decode('utf-8'))
-)
-
-
 @app.route('/ainews/<string:name>', methods=['GET'])
 def main(name):
     try:
@@ -45,18 +38,25 @@ def main(name):
             producer.send('stock-req', value={'id': name, 'payload': name})
             producer.flush()
 
-            start_time = time.time()
+            time.sleep(20)
+            count = 0
+            while count in range(0, 20):
+                try:
+                    dbresponse = list(collection.find({"name":name}, {"_id":0}))
+        
+                    if dbresponse:
+                        print("found")
+                        return jsonify(dbresponse)
+                    else:
+                        count+=1
+                        time.sleep(2)
+                except:
+                    print("error")
+                    
+            
 
-        while True:
-            for message in res_consumer:
-                print(message)
-                if message.value.get("response") == name:
-                    print("c")
+            
 
-            if time.time() - start_time > 5:
-                return {"error": "Request timed out"}
-
-            time.sleep(0.2)
 
             
 

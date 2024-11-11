@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import feedparser
 import pandas as pd 
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
@@ -29,6 +30,8 @@ def main(stock):
 
     ticker = str(stock.lower())
     print(f"Ticker: {ticker}")
+    print("start")
+    start = time.time()
 
     url = 'https://finance.yahoo.com/rss/headline?s='+str(ticker)
     feed = feedparser.parse(url)
@@ -58,15 +61,13 @@ def main(stock):
 
         collection.insert_one(data)
         
-        new_row = pd.DataFrame([[datetime, title, description, link, sentiment, score]], columns=df.columns)
-        df = pd.concat([new_row, df], ignore_index=True)
-
+        # new_row = pd.DataFrame([[datetime, title, description, link, sentiment, score]], columns=df.columns)
+        # df = pd.concat([new_row, df], ignore_index=True)
+    end = time.time()
+    print(end-start)
     # df.to_csv("rss_data.csv", index=False)
 
-    res_producer.send('stock-res', value=result)
-    res_producer.flush()
-
-    return ticker
+    return None
 
 
 consumer = KafkaConsumer(
@@ -76,22 +77,10 @@ consumer = KafkaConsumer(
     value_deserializer=lambda m: json.loads(m.decode('utf-8'))
 )
 
-res_producer = KafkaProducer(
-    bootstrap_servers=['localhost:9092'],
-    value_serializer=lambda v: json.dumps(v).encode('utf-8')
-)
-
 for message in consumer:
-    print(message)
     task_data = message.value
     task_id = task_data['id']
     payload = task_data['payload']
     
     ai_res = main(payload)
     
-    result = {"response": ai_res }
-    print(result)
-    
-    
-
-
