@@ -1,13 +1,10 @@
 import os
-import requests
 import json
-import threading
 import time
 from pymongo import MongoClient
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from flask_cors import CORS
-from kafka import KafkaProducer, KafkaConsumer
-from queue import Queue
+from kafka import KafkaProducer 
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -31,14 +28,14 @@ def main(name):
         dbresponse = list(collection.find({"name":name}, {"_id":0}))
         
         if dbresponse:
-            print("found")
+            print("found in db")
             return jsonify(dbresponse)
         else:
-            print("not found")
+            print("not found in db")
             producer.send('stock-req', value={'id': name, 'payload': name})
             producer.flush()
 
-            time.sleep(20)
+            time.sleep(25)
             count = 0
             while count in range(0, 20):
                 try:
@@ -49,20 +46,16 @@ def main(name):
                         return jsonify(dbresponse)
                     else:
                         count+=1
-                        time.sleep(2)
+                        time.sleep(1)
                 except:
                     print("error")
-                    
-            
-
-            
-
-
-            
 
     except Exception as e:
         print(f"Error occurred: {str(e)}")
-        return jsonify({"error":str(e)}), 500        
+        return jsonify({"error":str(e)}), 500  
+          
+    return None
+
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=3001, debug=True)

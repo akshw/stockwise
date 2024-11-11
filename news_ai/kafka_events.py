@@ -5,7 +5,7 @@ import feedparser
 import pandas as pd 
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 from pymongo import MongoClient
-from kafka import KafkaConsumer, KafkaProducer
+from kafka import KafkaConsumer
 from dotenv import load_dotenv
 
 
@@ -30,7 +30,6 @@ def main(stock):
 
     ticker = str(stock.lower())
     print(f"Ticker: {ticker}")
-    print("start")
     start = time.time()
 
     url = 'https://finance.yahoo.com/rss/headline?s='+str(ticker)
@@ -63,8 +62,10 @@ def main(stock):
         
         # new_row = pd.DataFrame([[datetime, title, description, link, sentiment, score]], columns=df.columns)
         # df = pd.concat([new_row, df], ignore_index=True)
+
     end = time.time()
-    print(end-start)
+    print(str(end-start)+ " seconds")
+
     # df.to_csv("rss_data.csv", index=False)
 
     return None
@@ -82,5 +83,5 @@ for message in consumer:
     task_id = task_data['id']
     payload = task_data['payload']
     
-    ai_res = main(payload)
+    main(payload)
     
