@@ -1,4 +1,5 @@
 **StockWise** is a web app that scrapes news data from various sources and analyzes the sentiment of news headlines using the Hugging Face FinBERT model. The application uses kafka for a queue management in backend.
+
 ![Stockwise Screenshot](./readme_img/screenshot.png)
 Ideal Architecture (working on it)
 ![Stockwise Screenshot](./readme_img/sys_design.png)
