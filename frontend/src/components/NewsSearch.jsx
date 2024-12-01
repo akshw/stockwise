@@ -3,7 +3,7 @@ import { LinkIcon, ThumbsUp, ThumbsDown, Minus, Search } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
 
-const Inputbox = () => {
+const NewsSearch = () => {
   const [stockName, setStockName] = useState("");
   const [isLoading, setIsloading] = useState(false);
   const [articles, setArticles] = useState([
@@ -144,7 +144,7 @@ const Inputbox = () => {
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <span
-                  className={`font-medium flex items-center ${
+                  className={`font-medium text-lg flex items-center ${
                     article.sentiment === "positive"
                       ? "text-green-500"
                       : article.sentiment === "negative"
@@ -173,4 +173,4 @@ const Inputbox = () => {
   );
 };
 
-export default Inputbox;
+export default NewsSearch;

@@ -1,5 +1,5 @@
 import Navbar from "./components/Navbar";
-import Inputbox from "./components/NewsSearch";
+import NewsSearch from "./components/NewsSearch";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
 
@@ -8,7 +8,7 @@ const App = () => {
     <>
       <Navbar />
       <Hero />
-      <Inputbox />
+      <NewsSearch />
       <Footer />
     </>
   );
