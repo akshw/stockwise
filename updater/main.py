@@ -1,32 +1,57 @@
 import os
 import json
 import time
+import logging
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from contextlib import contextmanager
+
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 load_dotenv()
 
-db_url = os.getenv('DATABASE_URL')
-client = MongoClient(db_url)
-db = client['stockwise']
-collection = db['rss_feed']
+@contextmanager
+def get_db_connection():
+    db_url = os.getenv('DATABASE_URL')
+    if not db_url:
+        raise ValueError("DATABASE_URL environment variable not set")
+    
+    client = None
+    try:
+        client = MongoClient(db_url)
+        yield client['stockwise']
+    except Exception as e:
+        logging.error(f"Database connection error: {e}")
+        raise
+    finally:
+        if client:
+            client.close()
 
 def get_all_names():
     try:
-        # Find all documents and project only the 'name' field
-        cursor = collection.find({}, {'name': 1, '_id': 0})
-        # Extract names into a list
-        names = [doc['name'] for doc in cursor]
-        return names
+        with get_db_connection() as db:
+            collection = db['rss_feed']
+            cursor = collection.find({}, {'name': 1, '_id': 0})
+            names = [doc['name'] for doc in cursor]
+            logging.info(f"Successfully retrieved {len(names)} names")
+            return names
     except Exception as e:
-        print(f"Error retrieving names: {e}")
+        logging.error(f"Error retrieving names: {e}")
         return []
 
 def main():
-    names = get_all_names()
-    if names:
-        print(f"Found {len(names)} names: {names}")
-    else:
-        print("No names found or error occurred")
+    try:
+        names = get_all_names()
+        if names:
+            logging.info(f"Found {len(names)} names: {names}")
+        else:
+            logging.warning("No names found")
+    except Exception as e:
+        logging.error(f"Main execution error: {e}")
 
-main()
+if __name__ == '__main__':
+    main()
